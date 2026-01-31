@@ -35,26 +35,41 @@
 
   <div id="player"></div>
 
-  <script>
-    let player;
+<script>
+  let player;
+  let started = false;
 
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '0',
-        width: '0',
-        videoId: 'sRlbeHN0FNU&list=RDsRlbeHN0FNU&start_radio=1',
-        playerVars: { 'playsinline': 1 }
-      });
-    }
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '0',
+      width: '0',
+      videoId: 'VIDEOID_HIER_EINSETZEN',
+      playerVars: {
+        playsinline: 1
+      },
+      events: {
+        onReady: onPlayerReady
+      }
+    });
+  }
 
-    function startMusic() {
+  function onPlayerReady() {
+    // Player ist jetzt bereit
+  }
+
+  function startMusic() {
+    if (!started) {
+      player.unMute();
       player.playVideo();
+      started = true;
     }
+  }
 
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-  </script>
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.body.appendChild(tag);
+</script>
+
 
 </body>
 </html>
