@@ -48,28 +48,40 @@
         playsinline: 1
       },
       events: {
-        onReady: onPlayerReady
+        onReady: onPlayerReady,
+        onStateChange: onPlayerStateChange
       }
     });
   }
 
   function onPlayerReady() {
-    // Player ist jetzt bereit
+    console.log("Player ist bereit!");
+  }
+
+  function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+      console.log("Video läuft!");
+    }
   }
 
   function startMusic() {
     if (!started) {
-      player.unMute();
-      player.playVideo();
-      started = true;
+      if (player) {
+        player.unMute();
+        player.playVideo();
+        started = true;
+        console.log("Musik gestartet!");
+      } else {
+        console.log("Player ist noch nicht bereit.");
+      }
     }
   }
 
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
-
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.body.appendChild(tag);
 </script>
+
 
 
 </body>
