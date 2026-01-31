@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Schulmusik Start</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding-top: 60px;
+    }
+    button {
+      font-size: 40px;
+      padding: 30px 60px;
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      background: #1db954;
+      color: white;
+    }
+    #player {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎶 Schulmusik 🎶</h1>
+  <p>Ein Klick – überall Musik</p>
+
+  <button onclick="startMusic()">▶ START</button>
+
+  <div id="player"></div>
+
+  <script>
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: 'sRlbeHN0FNU&list=RDsRlbeHN0FNU&start_radio=1',
+        playerVars: { 'playsinline': 1 }
+      });
+    }
+
+    function startMusic() {
+      player.playVideo();
+    }
+
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  </script>
+
+</body>
+</html>
