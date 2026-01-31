@@ -22,28 +22,6 @@
       color: white;
     }
   </style>
-
-  <!-- Firebase SDK hinzufügen -->
- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
-
-<script>
-  // Firebase-Konfiguration
-  const firebaseConfig = {
-    apiKey: "AIzaSyB6oywGaz3Azhj8IvuFeCZZtkyCcvO7Drs",
-    authDomain: "music-cab19.firebaseapp.com",
-    projectId: "music-cab19",
-    storageBucket: "music-cab19.firebasestorage.app",
-    messagingSenderId: "379495697909",
-    appId: "1:379495697909:web:93041e872ddf7dd29be4bc",
-    measurementId: "G-F8WYPGCH47"
-  };
-
-  // Firebase initialisieren
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore(app);
-</script>
-
 </head>
 <body>
 
@@ -52,29 +30,30 @@
 
   <button id="startButton">▶ START</button>
 
-  <audio id="audioPlayer" style="display:none;" controls>
-    <source src="DEIN_LINK_ZUR_MUSIK_HIER" type="audio/mpeg">
-    Dein Browser unterstützt dieses Audioformat nicht.
-  </audio>
+  <div id="videoContainer" style="display:none;">
+    <!-- YouTube-Video eingebettet -->
+    <iframe id="videoPlayer" width="560" height="315" src="https://www.youtube.com/embed/kJQP7kiw5Fk?autoplay=1&start=0&controls=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
 
 <script>
-  // Firebase Listener für "startMusic" - Überprüfen, ob Musik gestartet werden soll
-  db.collection("music").doc("status").onSnapshot((doc) => {
-    if (doc.exists && doc.data().play === true) {
-      document.getElementById("audioPlayer").play();
-    }
-  });
+  // Setze die Startzeit auf eine bestimmte Zeit (24h-Format)
+  const startTime = new Date().setHours(10, 55, 0, 0); // Beispiel: 15:30 Uhr
 
-  // Wenn der "START"-Button geklickt wird, wird die Nachricht an alle Geräte gesendet
+  // Die Funktion, die überprüft, ob die Zeit gekommen ist, das Video zu starten
+  function checkTimeAndPlay() {
+    const currentTime = new Date().getTime();
+    if (currentTime >= startTime) {
+      document.getElementById("videoContainer").style.display = "block"; // Zeige den Video-Container
+      clearInterval(timer); // Stoppt den Timer nach dem Start
+    }
+  }
+
+  // Der Timer überprüft alle 1000 ms (1 Sekunde), ob es Zeit ist, das Video zu starten
+  const timer = setInterval(checkTimeAndPlay, 1000);
+
+  // Optional: Button, um das Video manuell zu starten (falls du testen willst)
   document.getElementById("startButton").addEventListener("click", () => {
-    // Firebase-Dokument aktualisieren, dass die Musik starten soll
-    db.collection("music").doc("status").set({
-      play: true
-    }).then(() => {
-      console.log("Musik wird gestartet");
-    }).catch((error) => {
-      console.error("Fehler beim Starten der Musik: ", error);
-    });
+    document.getElementById("videoContainer").style.display = "block"; // Video-Container anzeigen
   });
 </script>
 
