@@ -23,6 +23,7 @@
     }
     #player {
       margin-top: 40px;
+      display: none;
     }
   </style>
 </head>
@@ -33,56 +34,19 @@
 
   <button onclick="startMusic()">▶ START</button>
 
-  <div id="player"></div>
+  <div id="player">
+    <!-- Hier wird das YouTube-Video eingebettet -->
+    <iframe id="ytplayer" type="text/html" width="640" height="360"
+      src="https://www.youtube.com/embed/sRlbeHN0FNU?autoplay=1&mute=0"
+      frameborder="0"></iframe>
+  </div>
 
 <script>
-  let player;
-  let started = false;
-
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-      height: '0',
-      width: '0',
-      videoId: 'sRlbeHN0FNU',
-      playerVars: {
-        playsinline: 1
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange
-      }
-    });
-  }
-
-  function onPlayerReady() {
-    console.log("Player ist bereit!");
-  }
-
-  function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-      console.log("Video läuft!");
-    }
-  }
-
   function startMusic() {
-    if (!started) {
-      if (player) {
-        player.unMute();
-        player.playVideo();
-        started = true;
-        console.log("Musik gestartet!");
-      } else {
-        console.log("Player ist noch nicht bereit.");
-      }
-    }
+    // Das Video anzeigen und automatisch starten
+    document.getElementById('player').style.display = 'block';
   }
-
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.body.appendChild(tag);
 </script>
-
-
 
 </body>
 </html>
