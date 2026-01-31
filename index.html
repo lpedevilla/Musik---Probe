@@ -21,67 +21,60 @@
       background: #1db954;
       color: white;
     }
-    #player {
-      margin-top: 40px;
-    }
   </style>
+
+  <!-- Firebase SDK hinzufügen -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+
+  <script>
+    // Firebase-Konfiguration (Deine Firebase-Projektkonfiguration)
+    const firebaseConfig = {
+      apiKey: "DEIN_API_KEY",
+      authDomain: "DEIN_PROJECT_ID.firebaseapp.com",
+      projectId: "DEIN_PROJECT_ID",
+      storageBucket: "DEIN_PROJECT_ID.appspot.com",
+      messagingSenderId: "DEIN_MESSAGING_SENDER_ID",
+      appId: "DEIN_APP_ID"
+    };
+
+    // Firebase initialisieren
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(app);
+  </script>
 </head>
 <body>
 
   <h1>🎶 Schulmusik 🎶</h1>
   <p>Ein Klick – überall Musik</p>
 
-  <button onclick="startMusic()">▶ START</button>
+  <button id="startButton">▶ START</button>
 
-  <div id="player"></div>
+  <audio id="audioPlayer" style="display:none;" controls>
+    <source src="DEIN_LINK_ZUR_MUSIK_HIER" type="audio/mpeg">
+    Dein Browser unterstützt dieses Audioformat nicht.
+  </audio>
 
 <script>
-  let player;
-  let started = false;
+  // Firebase Listener für "startMusic" - Überprüfen, ob Musik gestartet werden soll
+  db.collection("music").doc("status").onSnapshot((doc) => {
+    if (doc.exists && doc.data().play === true) {
+      document.getElementById("audioPlayer").play();
+    }
+  });
 
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-      height: '0',
-      width: '0',
-      videoId: 'sRlbeHN0FNU',
-      playerVars: {
-        playsinline: 1
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange
-      }
+  // Wenn der "START"-Button geklickt wird, wird die Nachricht an alle Geräte gesendet
+  document.getElementById("startButton").addEventListener("click", () => {
+    // Firebase-Dokument aktualisieren, dass die Musik starten soll
+    db.collection("music").doc("status").set({
+      play: true
+    }).then(() => {
+      console.log("Musik wird gestartet");
+    }).catch((error) => {
+      console.error("Fehler beim Starten der Musik: ", error);
     });
-  }
-
-  function onPlayerReady() {
-    console.log("Player ist bereit!");
-  }
-
-  function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-      console.log("Video läuft!");
-    }
-  }
-
-  function startMusic() {
-    if (!started) {
-      if (player) {
-        player.unMute();
-        player.playVideo();
-        started = true;
-        console.log("Musik gestartet!");
-      } else {
-        console.log("Player ist noch nicht bereit.");
-      }
-    }
-  }
-
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.body.appendChild(tag);
+  });
 </script>
-
 
 </body>
 </html>
